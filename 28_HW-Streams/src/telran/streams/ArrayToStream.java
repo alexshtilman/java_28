@@ -3,6 +3,8 @@ package telran.streams;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class ArrayToStream {
 	/*
@@ -24,11 +26,13 @@ public class ArrayToStream {
 	static void displayDigitsStatistics() {
 		int maxDigits = 1000000;
 		Random rand = new Random();
-		// int[] randomNumbers = rand.ints(maxDigits, 0, Integer.MAX_VALUE - 1).toArray();
-		int[] randomNumbers = rand.ints(maxDigits, 0, 1000).toArray();
-		Map<Integer, Long> map = Arrays.stream(randomNumbers).boxed()
+		int[] randomNumbers = rand.ints(maxDigits, 0, Integer.MAX_VALUE - 1).toArray();
+		Map<Integer, Long> result = Arrays.stream(randomNumbers).mapToObj(Integer::toString)
+				.flatMapToInt(s -> s.chars()).mapToObj(x -> x - '0')
 				.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-		map.entrySet().stream().sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
+
+		result.entrySet().stream().sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
 				.forEach(entry -> System.out.println(entry.getKey() + ":" + entry.getValue()));
+
 	}
 }
