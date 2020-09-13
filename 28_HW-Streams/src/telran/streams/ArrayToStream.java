@@ -14,8 +14,7 @@ public class ArrayToStream {
 		/*
 		 * Random().nextInt(2) - (0,2] = {0,1}
 		 */
-		Arrays.stream(ar).boxed().sorted((f1, f2) -> (new Random().nextInt(2)) == 0 ? -1 : 1)
-				.forEach(System.out::print);
+		new Random().ints(0, ar.length).distinct().limit(ar.length).forEach(i -> System.out.print(ar[i]));
 	}
 
 	/*
@@ -24,15 +23,14 @@ public class ArrayToStream {
 	 * <count>
 	 */
 	static void displayDigitsStatistics() {
-		int maxDigits = 1000000;
-		Random rand = new Random();
-		int[] randomNumbers = rand.ints(maxDigits, 0, Integer.MAX_VALUE - 1).toArray();
-		Map<Integer, Long> result = Arrays.stream(randomNumbers).mapToObj(Integer::toString)
-				.flatMapToInt(s -> s.chars()).mapToObj(x -> x - '0')
-				.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-
-		result.entrySet().stream().sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
-				.forEach(entry -> System.out.println(entry.getKey() + ":" + entry.getValue()));
+		int maxNumbers = 1000000;
+		new Random().ints(maxNumbers, 0, Integer.MAX_VALUE)
+					.mapToObj(Integer::toString)
+					.flatMapToInt(s -> s.chars())
+					.boxed()
+					.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+					.entrySet().stream().sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
+					.forEach(entry -> System.out.printf("%c : %d\n",entry.getKey(), entry.getValue()));
 
 	}
 }
